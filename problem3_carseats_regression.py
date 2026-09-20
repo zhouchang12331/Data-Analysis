@@ -14,6 +14,7 @@ ShelveLoc（货架位置），建立多元线性回归模型，并完成：
 """
 
 import sys
+import urllib.request
 from pathlib import Path
 
 import numpy as np
@@ -28,11 +29,30 @@ if hasattr(sys.stdout, "reconfigure"):
 
 # 数据文件与脚本放在同一目录，确保任何工作目录下运行都能找到
 DATA_PATH = Path(__file__).resolve().parent / "Carseats.csv"
+DATA_URL = ("https://raw.githubusercontent.com/selva86/datasets/"
+            "master/Carseats.csv")
+
+
+def load_data():
+    """读取 Carseats 数据；本地无文件时自动下载（与 R 中 ISLR 包数据一致）。"""
+    if DATA_PATH.exists():
+        return pd.read_csv(DATA_PATH)
+    print(f"未在 {DATA_PATH} 找到数据文件，尝试自动下载 ...")
+    try:
+        urllib.request.urlretrieve(DATA_URL, DATA_PATH)
+        print("下载完成。")
+        return pd.read_csv(DATA_PATH)
+    except Exception as exc:  # 网络不可用时给出明确指引
+        raise SystemExit(
+            f"数据下载失败（{exc}）。\n"
+            f"请手动下载 Carseats.csv（{DATA_URL}）"
+            f"并放置到脚本同目录 {DATA_PATH.parent} 后重新运行。"
+        )
 
 # ---------------------------------------------------------------------------
 # 1. 加载数据
 # ---------------------------------------------------------------------------
-df = pd.read_csv(DATA_PATH)
+df = load_data()
 print("=" * 78)
 print("数据概览")
 print("=" * 78)
