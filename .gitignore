@@ -1,0 +1,21 @@
+# 数据文件
+*.csv
+*.tsv
+*.xlsx
+*.xls
+
+# 图片/图表
+figures/
+*.png
+*.jpg
+*.jpeg
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+
+# 临时文件
+*.tmp
+*.log
+.DS_Store
